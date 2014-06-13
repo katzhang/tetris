@@ -1,8 +1,9 @@
 'use strict';
 
 //global variables
-var canvas = document.getElementById('canvas');
-var ctx = canvas.getContext('2d');
+var container = document.querySelector('.container');
+// var canvas = document.getElementById('canvas');
+// var ctx = canvas.getContext('2d');
 var gridSize = 20;
 var gridStroke = 2;
 var totalSize = gridSize + 2 * gridStroke;
@@ -46,7 +47,7 @@ var shapesPool = [
 	}
 ];
 
-function drawGrid(posX, posY) {
+function drawGrid(posX, posY, ctx) {
 	ctx.fillStyle = 'red';
 	ctx.fillRect(posX, posY, gridSize, gridSize);
 
@@ -91,26 +92,29 @@ function Grids(options) {
 		var posX = this.posX;
 		var posY = this.posY;
 		var points = this.points;
+
+		//create grid's own canvas and context
 		var gCanvas = document.createElement('canvas');
 		var gCtx = gCanvas.getContext('2d');
-		gCanvas.width = numberX * totalSize;
-		gCanvas.height = numberY * totalSize;
+		gCanvas.width = numberX * gridSize;
+		gCanvas.height = numberY * gridSize;
 
-		this.canvas = gCanvas;
-		this.ctx = gCtx;
-
+		container.appendChild(gCanvas);
 
 		for(var i = 0; i < numberX; i++) {
 			for(var j = 0; j < numberY; j++) {
 				if(!compareArray(points[0], [i,j]) && !compareArray(points[1], [i,j])) {
-					drawGrid(posX + i * gridSize, posY + j * gridSize);
+					drawGrid(posX + i * gridSize, posY + j * gridSize, gCtx);
 				}
 			}
 		}
+
+		this.canvas = gCanvas;
+		this.ctx = gCtx;
 	};
 
 	this.init();
 }
 
 
-var grid = new Grids({shape: shapesPool[6], posX: 50, posY: 50});
+var grid = new Grids({shape: shapesPool[6], posX: 0, posY: 0});
