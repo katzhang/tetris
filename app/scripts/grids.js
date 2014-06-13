@@ -5,6 +5,7 @@ var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 var gridSize = 20;
 var gridStroke = 2;
+var totalSize = gridSize + 2 * gridStroke;
 var shapesPool = [
 	{
 		height: 3,
@@ -90,13 +91,19 @@ function Grids(options) {
 		var posX = this.posX;
 		var posY = this.posY;
 		var points = this.points;
+		var gCanvas = document.createElement('canvas');
+		var gCtx = gCanvas.getContext('2d');
+		gCanvas.width = numberX * totalSize;
+		gCanvas.height = numberY * totalSize;
+
+		this.canvas = gCanvas;
+		this.ctx = gCtx;
+
 
 		for(var i = 0; i < numberX; i++) {
 			for(var j = 0; j < numberY; j++) {
 				if(!compareArray(points[0], [i,j]) && !compareArray(points[1], [i,j])) {
 					drawGrid(posX + i * gridSize, posY + j * gridSize);
-				} else {
-					console.log('compareArray returns true');
 				}
 			}
 		}
