@@ -8,28 +8,19 @@ window.addEventListener('keydown', function(e) {
 
     switch(e.keyCode) {
     	case 39:
-    		grid = moveToSide(grid, false);
+    		moveToSide(grid, false);
     		break;
 
     	case 37:
-    		grid = moveToSide(grid, true);
+    		moveToSide(grid, true);
     		break;
     }
     console.log(e.keyCode);
 }, false);
 
 function moveToSide(obj, ifToLeft) {
-	var shape = obj.shape;
-	var numX = shape.width;
-	var numY = shape.height;
-	var posX = obj.posX;
-	var posY = obj.posY;
-	console.log('posX: ' + posX);
-
-	//clear canvas
-	ctx.clearRect(posX - gridStroke, posY - gridStroke, numX * gridSize + 2 * gridStroke, numY * gridSize + 2 * gridStroke);
-	var newPosX = posX + (ifToLeft ? -10 : 10);
-	obj = new Grids({shape: shape, posX: newPosX, posY: posY});
-
-	return obj;
+	var left = obj.canvas.style.left;
+	left = left ? parseInt(left.replace('px', '')) : 0;
+	left = (ifToLeft ? (left - 10) : (left + 10)) + 'px';
+	obj.canvas.style.left = left;
 }
