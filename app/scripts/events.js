@@ -14,6 +14,10 @@ window.addEventListener('keydown', function(e) {
     	case 37:
     		moveToSide(grid, true);
     		break;
+    	case 38:
+    		rotate(grid);
+    		break;
+
     }
     console.log(e.keyCode);
 }, false);
@@ -23,4 +27,11 @@ function moveToSide(obj, ifToLeft) {
 	left = left ? parseInt(left.replace('px', '')) : 0;
 	left = (ifToLeft ? (left - 10) : (left + 10)) + 'px';
 	obj.canvas.style.left = left;
+}
+
+function rotate(obj) {
+	var rotate = obj.canvas.style.webkitTransform;
+	rotate = rotate ? parseInt(rotate.replace(/^\D+/g, '')) : 0;
+	rotate = rotate + 90;
+	obj.canvas.style.webkitTransform = 'rotate(' + rotate + 'deg)';
 }
