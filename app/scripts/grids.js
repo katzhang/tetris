@@ -1,7 +1,7 @@
 'use strict';
 
 //global variables
-var container = document.querySelector('.container');
+var container = document.querySelector('.board');
 // var canvas = document.getElementById('canvas');
 // var ctx = canvas.getContext('2d');
 var gridSize = 20;
