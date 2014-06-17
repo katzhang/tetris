@@ -1,7 +1,6 @@
 'use strict';
 
 //global variables
-var container = document.querySelector('.board');
 // var canvas = document.getElementById('canvas');
 // var ctx = canvas.getContext('2d');
 var gridSize = 20;
@@ -115,6 +114,3 @@ function Grids(options) {
 
 	this.init();
 }
-
-
-var grid = new Grids({shape: shapesPool[6], posX: 0, posY: 0});
