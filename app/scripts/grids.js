@@ -75,6 +75,11 @@ function Grids(options) {
 	this.height = 1;
 	this.posX = null;
 	this.posY = null;
+	this.fps = 1.5;
+	this.now = null;
+	this.then = null;
+	this.delta = null;
+	this.interval = 1000/this.fps;
 
 	for(var n in options) {
 		this[n] = options[n];
@@ -84,6 +89,21 @@ function Grids(options) {
 	this.height = this.shape.height;
 	this.points = this.shape.points;
 
+	this.fall = function(timestamp) {
+		var top = this.canvas.style.top;
+		top = top ? parseInt(top.replace('px', '')) : 0;
+		if(top > 400) return false;
+		requestAnimationFrame(this.fall.bind(this));
+		this.now = Date.now();
+		this.delta = this.now - this.then;
+
+		if(this.delta > this.interval) {
+			this.then = this.now - (this.delta % this.interval);
+			top = (top + 10) + 'px';
+			this.canvas.style.top = top;
+		}
+	}
+
 	this.init = function() {
 		console.log('new grid init');
 		var numberX = this.width;
@@ -91,6 +111,8 @@ function Grids(options) {
 		var posX = this.posX;
 		var posY = this.posY;
 		var points = this.points;
+
+		this.then = Date.now();
 
 		//create grid's own canvas and context
 		var gCanvas = document.createElement('canvas');
@@ -110,6 +132,8 @@ function Grids(options) {
 
 		this.canvas = gCanvas;
 		this.ctx = gCtx;
+
+		this.fall()
 	};
 
 	this.init();

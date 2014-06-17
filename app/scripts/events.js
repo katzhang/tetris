@@ -25,7 +25,7 @@ window.addEventListener('keydown', function(e) {
 function moveToSide(obj, ifToLeft) {
 	var left = obj.canvas.style.left;
 	left = left ? parseInt(left.replace('px', '')) : 0;
-	left = (ifToLeft ? (left - 10) : (left + 10)) + 'px';
+	left = (ifToLeft ? (left - gridSize) : (left + gridSize)) + 'px';
 	obj.canvas.style.left = left;
 }
 
@@ -34,4 +34,10 @@ function rotate(obj) {
 	rotate = rotate ? parseInt(rotate.replace(/^\D+/g, '')) : 0;
 	rotate = rotate + 90;
 	obj.canvas.style.webkitTransform = 'rotate(' + rotate + 'deg)';
+
+	var left = obj.canvas.style.left;
+	left = left ? parseInt(left.replace('px', '')) : 0;
+	//todo: always centered
+	left = (left - gridSize/2) + 'px';
+	obj.canvas.style.left = left;
 }
