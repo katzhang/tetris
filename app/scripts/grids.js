@@ -75,11 +75,15 @@ function Grids(options) {
 	this.height = 1;
 	this.posX = null;
 	this.posY = null;
-	this.fps = 1.5;
+
+	this.fps = 10;
 	this.now = null;
 	this.then = null;
 	this.delta = null;
 	this.interval = 1000/this.fps;
+
+	this.rotateCount = 0;
+	this.moveToSideCount = 0;
 
 	for(var n in options) {
 		this[n] = options[n];
@@ -92,14 +96,14 @@ function Grids(options) {
 	this.fall = function(timestamp) {
 		var top = this.canvas.style.top;
 		top = top ? parseInt(top.replace('px', '')) : 0;
-		if(top > 400) return false;
+		if(top >= (board.height - this.height * gridSize)) return false;
 		requestAnimationFrame(this.fall.bind(this));
 		this.now = Date.now();
 		this.delta = this.now - this.then;
 
 		if(this.delta > this.interval) {
 			this.then = this.now - (this.delta % this.interval);
-			top = (top + 10) + 'px';
+			top = (top + gridSize) + 'px';
 			this.canvas.style.top = top;
 		}
 	}
