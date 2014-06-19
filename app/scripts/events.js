@@ -8,14 +8,14 @@ window.addEventListener('keydown', function(e) {
 
     switch(e.keyCode) {
     	case 39:
-    		moveToSide(grid, false);
+    		moveToSide(currentGrid, false);
     		break;
 
     	case 37:
-    		moveToSide(grid, true);
+    		moveToSide(currentGrid, true);
     		break;
     	case 38:
-    		rotate(grid);
+    		rotate(currentGrid);
     		break;
 
     }
@@ -53,9 +53,11 @@ function rotate(obj) {
 	obj.canvas.style.left = left;
 
 	//always centered: vertical
-	console.log(top);
-	top = (top - gridSize/2) + 'px';
-	obj.canvas.style.top = top;
+	// if(obj.rotateCount % 2) {
+	// 	console.log('odd number');
+	// 	top = (top + gridSize/2) + 'px';
+	// 	obj.canvas.style.top = top;
+	// }
 
 	//change grid's height and width
 	obj.width = height;

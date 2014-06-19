@@ -10,44 +10,52 @@ var shapesPool = [
 	{
 		height: 3,
 		width: 2,
-		points: [[1, 0], [0, 2]]
+		points: [[1, 0], [0, 2]],
+		color: 'red'
 	},
 
 	{
 		height: 3,
 		width: 2,
-		points: [[0, 0], [1,2]]
+		points: [[0, 0], [1,2]],
+		color: 'blue'
 	},
 	{
 		height: 4,
 		width: 1,
-		points: []
+		points: [],
+		color: 'green'
 	},
 	{
 		height: 2,
 		width: 3,
-		points: [[0, 1], [2, 1]]
+		points: [[0, 1], [2, 1]],
+		color: 'yellow'
 
 	},
 	{
 		height: 2,
 		width: 2,
-		points: []
+		points: [],
+		color: 'purple'
 	},
 	{
 		height: 3,
 		width: 2,
-		points: [[0, 1], [0, 2]]
+		points: [[0, 1], [0, 2]],
+		color: 'orange'
 	},
 	{
 		height: 3,
 		width: 2,
-		points: [[1, 1], [1, 2]]
+		points: [[1, 1], [1, 2]],
+		color: 'pink'
 	}
 ];
 
-function drawGrid(posX, posY, ctx) {
-	ctx.fillStyle = 'red';
+
+function drawGrid(posX, posY, ctx, color) {
+	ctx.fillStyle = color;
 	ctx.fillRect(posX, posY, gridSize, gridSize);
 
 	ctx.strokeStyle = '#000000';
@@ -67,6 +75,11 @@ function compareArray(array1, array2) {
 	}
 
 	return true;
+}
+
+//Get a random number betwee min and max (both inclusive)
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function Grids(options) {
@@ -92,11 +105,19 @@ function Grids(options) {
 	this.width = this.shape.width;
 	this.height = this.shape.height;
 	this.points = this.shape.points;
+	this.color = this.shape.color;
 
 	this.fall = function(timestamp) {
 		var top = this.canvas.style.top;
 		top = top ? parseInt(top.replace('px', '')) : 0;
-		if(top >= (board.height - this.height * gridSize)) return false;
+		console.log(this.height);
+		if(top >= (board.height - this.height * gridSize)) {
+			//When to stop
+			this.state = 'still';
+			var randomNumber = getRandomInt(0, 6);
+			currentGrid = new Grids({shape: shapesPool[randomNumber], posX: 0, posY: 0});
+			return false;
+		};
 		requestAnimationFrame(this.fall.bind(this));
 		this.now = Date.now();
 		this.delta = this.now - this.then;
@@ -115,6 +136,15 @@ function Grids(options) {
 		var posX = this.posX;
 		var posY = this.posY;
 		var points = this.points;
+		var color = this.color;
+
+		//Manage IDs of grids
+		this.previousId = GRID_IDS.length ? GRID_IDS[GRID_IDS.length - 1] : -1;
+		this.id = this.previousId + 1;
+		GRID_IDS.push(this.id);
+
+		//Set initial state to be "falling"
+		this.state = 'falling';
 
 		this.then = Date.now();
 
@@ -129,7 +159,7 @@ function Grids(options) {
 		for(var i = 0; i < numberX; i++) {
 			for(var j = 0; j < numberY; j++) {
 				if(!compareArray(points[0], [i,j]) && !compareArray(points[1], [i,j])) {
-					drawGrid(posX + i * gridSize, posY + j * gridSize, gCtx);
+					drawGrid(posX + i * gridSize, posY + j * gridSize, gCtx, color);
 				}
 			}
 		}

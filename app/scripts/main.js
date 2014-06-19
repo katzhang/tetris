@@ -1,3 +1,5 @@
 'use strict';
 
-var grid = new Grids({shape: shapesPool[6], posX: 0, posY: 0});
+var GRID_IDS = [];
+
+var currentGrid = new Grids({shape: shapesPool[6], posX: 0, posY: 0});
