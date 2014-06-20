@@ -129,6 +129,10 @@ function Grids(options) {
 		}
 	}
 
+	this.validate = function() {
+		
+	}
+
 	this.init = function() {
 		console.log('new grid init');
 		var numberX = this.width;
