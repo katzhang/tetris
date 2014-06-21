@@ -89,7 +89,7 @@ function Grids(options) {
 	this.posX = null;
 	this.posY = null;
 
-	this.fps = 10;
+	this.fps = 1.5;
 	this.now = null;
 	this.then = null;
 	this.delta = null;
@@ -110,8 +110,7 @@ function Grids(options) {
 	this.fall = function(timestamp) {
 		var top = this.canvas.style.top;
 		top = top ? parseInt(top.replace('px', '')) : 0;
-		console.log(this.height);
-		if(top >= (board.height - this.height * gridSize)) {
+		if(top >= (board.height * gridSize - this.height * gridSize)) {
 			//When to stop
 			this.state = 'still';
 			var randomNumber = getRandomInt(0, 6);
@@ -129,8 +128,24 @@ function Grids(options) {
 		}
 	}
 
-	this.validate = function() {
-		
+	this.validate = function(offsetX, offsetY, ifRotate) {
+		console.log('validate');
+		var posX = this.posX + offsetX;
+		var posY = this.posY + offsetY;
+		var height = this.height;
+		var width = this.width;
+
+		if(ifRotate) {
+			this.height = width;
+			this.width = height;
+		}
+
+		if (posX > board.width 
+			|| posX < 0) {
+			return false;
+		}
+
+		return true;
 	}
 
 	this.init = function() {
@@ -163,7 +178,7 @@ function Grids(options) {
 		for(var i = 0; i < numberX; i++) {
 			for(var j = 0; j < numberY; j++) {
 				if(!compareArray(points[0], [i,j]) && !compareArray(points[1], [i,j])) {
-					drawGrid(posX + i * gridSize, posY + j * gridSize, gCtx, color);
+					drawGrid((posX + i) * gridSize, (posY + j) * gridSize, gCtx, color);
 				}
 			}
 		}

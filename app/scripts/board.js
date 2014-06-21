@@ -21,8 +21,8 @@ function Board(options) {
 	this.init = function() {
 		var size = this.size;
 		var sizes = this.boardSizes;
-		this.width = sizes[size][0] * gridSize;
-		this.height = sizes[size][1] * gridSize;
+		this.width = sizes[size][0];
+		this.height = sizes[size][1];
 		container.style.width = sizes[size][0] * gridSize + 'px';
 		container.style.height = sizes[size][1] * gridSize + 'px';
 	}

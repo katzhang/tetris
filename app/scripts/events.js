@@ -8,14 +8,20 @@ window.addEventListener('keydown', function(e) {
 
     switch(e.keyCode) {
     	case 39:
-    		moveToSide(currentGrid, false);
+    		if(currentGrid.validate(1,0)) {
+    			moveToSide(currentGrid, false);
+    		}
     		break;
 
     	case 37:
-    		moveToSide(currentGrid, true);
+    		if(currentGrid.validate(-1,0)) {
+    			moveToSide(currentGrid, true);
+    		}
     		break;
     	case 38:
-    		rotate(currentGrid);
+    		if(currentGrid.validate(0,0,true)) {
+    			rotate(currentGrid);
+    		}
     		break;
 
     }
