@@ -6,6 +6,8 @@ window.addEventListener('keydown', function(e) {
         e.preventDefault();
     }
 
+    console.log(currentGrid.posX);
+
     switch(e.keyCode) {
     	case 39:
     		if(currentGrid.validate(1,0)) {
@@ -36,6 +38,12 @@ function moveToSide(obj, ifToLeft) {
 	left = left ? parseInt(left.replace('px', '')) : 0;
 	left = (ifToLeft ? (left - gridSize) : (left + gridSize)) + 'px';
 	obj.canvas.style.left = left;
+
+	if(ifToLeft) {
+		obj.posX--;
+	} else {
+		obj.posX++;
+	}
 
 }
 

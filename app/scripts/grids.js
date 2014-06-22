@@ -140,7 +140,7 @@ function Grids(options) {
 			this.width = height;
 		}
 
-		if (posX > board.width 
+		if (posX > (board.width - width)
 			|| posX < 0) {
 			return false;
 		}
