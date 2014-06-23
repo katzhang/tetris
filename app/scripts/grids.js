@@ -53,7 +53,6 @@ var shapesPool = [
 	}
 ];
 
-
 function drawGrid(posX, posY, ctx, color) {
 	ctx.fillStyle = color;
 	ctx.fillRect(posX, posY, gridSize, gridSize);
@@ -86,10 +85,10 @@ function Grids(options) {
 	this.shape = null;
 	this.width = 1;
 	this.height = 1;
-	this.posX = null;
-	this.posY = null;
+	this.posX = 0;
+	this.posY = 0;
 
-	this.fps = 1.5;
+	this.fps = 10;
 	this.now = null;
 	this.then = null;
 	this.delta = null;
@@ -110,26 +109,54 @@ function Grids(options) {
 	this.fall = function(timestamp) {
 		var top = this.canvas.style.top;
 		top = top ? parseInt(top.replace('px', '')) : 0;
-		if(top >= (board.height * gridSize - this.height * gridSize)) {
-			//When to stop
+
+		var valid = this.validate(0, 1, false);
+		var arr = ['banana'];
+		var posX = this.posX;
+		var posY = this.posY;
+		var width = this.width;
+		var height = this.height;
+
+		//When stopped
+		if(top >= (board.height * gridSize - this.height * gridSize) || !valid) {
+			//Update state to be "still"
 			this.state = 'still';
+
+			//Update positions
+			console.log(posY);
+			console.log(posY - height);
+			for(var i = posX; i < posX + width; i++) {
+				for(var j = posY; j < posY + height; j++) {
+					board.filledPoints.push([i,j]);
+					console.log(board.filledPoints);
+					console.log('board ' + i + ' ' + j + ' now is unavailable')
+				}
+			}
+
+			//Generate a new grid
 			var randomNumber = getRandomInt(0, 6);
 			currentGrid = new Grids({shape: shapesPool[randomNumber], posX: 0, posY: 0});
 			return false;
 		};
+
 		requestAnimationFrame(this.fall.bind(this));
+
 		this.now = Date.now();
 		this.delta = this.now - this.then;
 
 		if(this.delta > this.interval) {
+			//First check if next position is available
 			this.then = this.now - (this.delta % this.interval);
 			top = (top + gridSize) + 'px';
 			this.canvas.style.top = top;
+
+			//Update posY of the currentGrid
+			this.posY++;
+
 		}
 	}
 
 	this.validate = function(offsetX, offsetY, ifRotate) {
-		console.log('validate');
 		var posX = this.posX + offsetX;
 		var posY = this.posY + offsetY;
 		var height = this.height;
@@ -139,6 +166,15 @@ function Grids(options) {
 			this.height = width;
 			this.width = height;
 		}
+
+		board.filledPoints.forEach(function(point) {
+			if(point[0] == posX
+			   || point[0] == posX + width
+			   || point[1] == posY
+			   || point[1] == posY) {
+				return false;
+			}
+		})
 
 		if (posX > (board.width - width)
 			|| posX < 0) {

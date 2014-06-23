@@ -14,6 +14,8 @@ function Board(options) {
 		'small': [20, 15]
 	}
 
+	this.filledPoints = [];
+
 	for(var n in options) {
 		this[n] = options[n];
 	}
