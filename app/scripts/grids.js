@@ -10,45 +10,45 @@ var shapesPool = [
 	{
 		height: 3,
 		width: 2,
-		points: [[1, 0], [0, 2]],
+		points: [[0, 0], [0, 1], [1, 1], [1, 2]],
 		color: 'red'
 	},
 
 	{
 		height: 3,
 		width: 2,
-		points: [[0, 0], [1,2]],
+		points: [[1, 0], [0, 1], [1, 1], [0, 2]],
 		color: 'blue'
 	},
 	{
 		height: 4,
 		width: 1,
-		points: [],
+		points: [[0, 0], [0, 1], [0, 2], [0, 3]],
 		color: 'green'
 	},
 	{
 		height: 2,
 		width: 3,
-		points: [[0, 1], [2, 1]],
+		points: [[0, 0], [1, 0], [2, 0], [1, 1]],
 		color: 'yellow'
 
 	},
 	{
 		height: 2,
 		width: 2,
-		points: [],
+		points: [[0, 0], [0, 1], [1, 1], [1, 0]],
 		color: 'purple'
 	},
 	{
 		height: 3,
 		width: 2,
-		points: [[0, 1], [0, 2]],
+		points: [[0, 0], [1, 0], [1, 1], [1, 2]],
 		color: 'orange'
 	},
 	{
 		height: 3,
 		width: 2,
-		points: [[1, 1], [1, 2]],
+		points: [[0, 0], [1, 0], [0, 1], [0, 2]],
 		color: 'pink'
 	}
 ];
@@ -88,7 +88,7 @@ function Grids(options) {
 	this.posX = 0;
 	this.posY = 0;
 
-	this.fps = 10;
+	this.fps = 2;
 	this.now = null;
 	this.then = null;
 	this.delta = null;
@@ -111,11 +111,11 @@ function Grids(options) {
 		top = top ? parseInt(top.replace('px', '')) : 0;
 
 		var valid = this.validate(0, 1, false);
-		var arr = ['banana'];
 		var posX = this.posX;
 		var posY = this.posY;
 		var width = this.width;
 		var height = this.height;
+		var points = this.points;
 
 		//When stopped
 		if(top >= (board.height * gridSize - this.height * gridSize) || !valid) {
@@ -123,15 +123,21 @@ function Grids(options) {
 			this.state = 'still';
 
 			//Update positions
-			console.log(posY);
-			console.log(posY - height);
-			for(var i = posX; i < posX + width; i++) {
-				for(var j = posY; j < posY + height; j++) {
-					board.filledPoints.push([i,j]);
-					console.log(board.filledPoints);
-					console.log('board ' + i + ' ' + j + ' now is unavailable')
-				}
-			}
+			// for(var i = posX; i < posX + width; i++) {
+			// 	for(var j = posY; j < posY + height; j++) {
+			// 		board.filledPoints.push([i,j]);
+			// 		// console.log(board.filledPoints);
+			// 		console.log('board ' + i + ' ' + j + ' now is unavailable')
+			// 	}
+			// }
+
+			points.forEach(function(point) {
+				var x = point[0] + posX;
+				var y = point[1] + posY;
+
+				board.filledPoints.push([x, y]);
+				console.log('board ' + x + ' ' + y + ' now is unavailable')
+			})
 
 			//Generate a new grid
 			var randomNumber = getRandomInt(0, 6);
@@ -161,27 +167,32 @@ function Grids(options) {
 		var posY = this.posY + offsetY;
 		var height = this.height;
 		var width = this.width;
+		var points = this.points;
+		var output = true;
 
 		if(ifRotate) {
 			this.height = width;
 			this.width = height;
 		}
 
-		board.filledPoints.forEach(function(point) {
-			if(point[0] == posX
-			   || point[0] == posX + width
-			   || point[1] == posY
-			   || point[1] == posY) {
-				return false;
-			}
+		board.filledPoints.forEach(function(filledPoint) {
+			// if(posX == point[0] && posY == point[1]) {
+			// 	output = false;
+			// }
+			points.forEach(function(shapePoint) {
+				if((shapePoint[0] + posX) == filledPoint[0] && 
+					shapePoint[1] + posY == filledPoint[1]) {
+					output = false;
+				}
+			})
 		})
 
 		if (posX > (board.width - width)
 			|| posX < 0) {
-			return false;
+			output = false;
 		}
 
-		return true;
+		return output;
 	}
 
 	this.init = function() {
@@ -213,8 +224,10 @@ function Grids(options) {
 
 		for(var i = 0; i < numberX; i++) {
 			for(var j = 0; j < numberY; j++) {
-				if(!compareArray(points[0], [i,j]) && !compareArray(points[1], [i,j])) {
-					drawGrid((posX + i) * gridSize, (posY + j) * gridSize, gCtx, color);
+				for(var k = 0; k < points.length; k++) {
+					if(compareArray(points[k], [i, j])) {
+						drawGrid((posX + i) * gridSize, (posY + j) * gridSize, gCtx, color);
+					}
 				}
 			}
 		}
