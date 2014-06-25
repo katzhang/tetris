@@ -10,7 +10,15 @@ var shapesPool = [
 	{
 		height: 3,
 		width: 2,
-		points: [[0, 0], [0, 1], [1, 1], [1, 2]],
+		points: [
+			[[0, 0], [0, 1], [1, 1], [1, 2]],
+			[[]]
+		],
+		shape: [
+			[1, 0],
+			[1, 1],
+			[0, 1]
+		],
 		color: 'red'
 	},
 
@@ -18,18 +26,33 @@ var shapesPool = [
 		height: 3,
 		width: 2,
 		points: [[1, 0], [0, 1], [1, 1], [0, 2]],
+		shape: [
+			[0, 1],
+			[1, 1],
+			[1, 0]
+		],
 		color: 'blue'
 	},
 	{
 		height: 4,
 		width: 1,
 		points: [[0, 0], [0, 1], [0, 2], [0, 3]],
+		shape: [
+			[1],
+			[1],
+			[1],
+			[1]
+		],
 		color: 'green'
 	},
 	{
 		height: 2,
 		width: 3,
 		points: [[0, 0], [1, 0], [2, 0], [1, 1]],
+		shape: [
+			[1, 1, 1],
+			[0, 1, 0]
+		],
 		color: 'yellow'
 
 	},
@@ -37,18 +60,32 @@ var shapesPool = [
 		height: 2,
 		width: 2,
 		points: [[0, 0], [0, 1], [1, 1], [1, 0]],
+		shape: [
+			[1, 1],
+			[1, 1]
+		],
 		color: 'purple'
 	},
 	{
 		height: 3,
 		width: 2,
 		points: [[0, 0], [1, 0], [1, 1], [1, 2]],
+		shape: [
+			[1, 1],
+			[0, 1],
+			[0, 1]
+		],
 		color: 'orange'
 	},
 	{
 		height: 3,
 		width: 2,
 		points: [[0, 0], [1, 0], [0, 1], [0, 2]],
+		shape: [
+			[1, 1],
+			[1, 0],
+			[1, 0]
+		],
 		color: 'pink'
 	}
 ];

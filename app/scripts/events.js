@@ -53,18 +53,31 @@ function rotate(obj) {
 
 	var height = obj.height;
 	var width = obj.width;
+	var points = obj.points;
+
 	var rotate = obj.canvas.style.webkitTransform;
 	rotate = rotate ? parseInt(rotate.replace(/^\D+/g, '')) : 0;
 	rotate = rotate + 90;
+	console.log(obj.canvas.style);
 	obj.canvas.style.webkitTransform = 'rotate(' + rotate + 'deg)';
+	obj.canvas.style.webkitTransformOrigin = '0 0';
 
 	var left = obj.canvas.style.left;
 	var top = obj.canvas.style.top;
 	left = left ? parseInt(left.replace('px', '')) : 0;
 	top = top ? parseInt(top.replace('px', '')) : 0;
-	//todo: always centered: horizontal
-	left = (left - gridSize/2) + 'px';
+
+	//always centered: horizontal
+	if(obj.rotateCount % 2) {
+		left = left + gridSize;
+	} else {
+		left = left - gridSize;
+	}
+	left = left + 'px';
 	obj.canvas.style.left = left;
+
+	//Update points
+
 
 	//always centered: vertical
 	// if(obj.rotateCount % 2) {
