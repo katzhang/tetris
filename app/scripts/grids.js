@@ -208,10 +208,10 @@ function Grids(options) {
 		var points = this.points;
 		var output = true;
 
-		if(ifRotate) {
-			this.height = width;
-			this.width = height;
-		}
+		// if(ifRotate) {
+		// 	this.height = width;
+		// 	this.width = height;
+		// }
 
 		board.filledPoints.forEach(function(filledPoint) {
 			// if(posX == point[0] && posY == point[1]) {
@@ -268,6 +268,7 @@ function Grids(options) {
 				}
 			}
 		}
+		console.log('canvas width ' + gCanvas.width);
 
 
 
