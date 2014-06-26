@@ -14,7 +14,7 @@ var shapesPool = [
 			[[0, 0], [0, 1], [1, 1], [1, 2]],
 			[[]]
 		],
-		shape: [
+		shapePoints: [
 			[1, 0],
 			[1, 1],
 			[0, 1]
@@ -26,7 +26,7 @@ var shapesPool = [
 		height: 3,
 		width: 2,
 		points: [[1, 0], [0, 1], [1, 1], [0, 2]],
-		shape: [
+		shapePoints: [
 			[0, 1],
 			[1, 1],
 			[1, 0]
@@ -37,7 +37,7 @@ var shapesPool = [
 		height: 4,
 		width: 1,
 		points: [[0, 0], [0, 1], [0, 2], [0, 3]],
-		shape: [
+		shapePoints: [
 			[1],
 			[1],
 			[1],
@@ -49,7 +49,7 @@ var shapesPool = [
 		height: 2,
 		width: 3,
 		points: [[0, 0], [1, 0], [2, 0], [1, 1]],
-		shape: [
+		shapePoints: [
 			[1, 1, 1],
 			[0, 1, 0]
 		],
@@ -60,7 +60,7 @@ var shapesPool = [
 		height: 2,
 		width: 2,
 		points: [[0, 0], [0, 1], [1, 1], [1, 0]],
-		shape: [
+		shapePoints: [
 			[1, 1],
 			[1, 1]
 		],
@@ -70,7 +70,7 @@ var shapesPool = [
 		height: 3,
 		width: 2,
 		points: [[0, 0], [1, 0], [1, 1], [1, 2]],
-		shape: [
+		shapePoints: [
 			[1, 1],
 			[0, 1],
 			[0, 1]
@@ -81,7 +81,7 @@ var shapesPool = [
 		height: 3,
 		width: 2,
 		points: [[0, 0], [1, 0], [0, 1], [0, 2]],
-		shape: [
+		shapePoints: [
 			[1, 1],
 			[1, 0],
 			[1, 0]
@@ -142,6 +142,7 @@ function Grids(options) {
 	this.height = this.shape.height;
 	this.points = this.shape.points;
 	this.color = this.shape.color;
+	this.shapePoints = this.shape.shapePoints;
 
 	this.fall = function(timestamp) {
 		var top = this.canvas.style.top;
@@ -239,6 +240,7 @@ function Grids(options) {
 		var posX = this.posX;
 		var posY = this.posY;
 		var points = this.points;
+		var shapePoints = this.shapePoints;
 		var color = this.color;
 
 		//Manage IDs of grids
@@ -259,15 +261,15 @@ function Grids(options) {
 
 		container.appendChild(gCanvas);
 
-		for(var i = 0; i < numberX; i++) {
-			for(var j = 0; j < numberY; j++) {
-				for(var k = 0; k < points.length; k++) {
-					if(compareArray(points[k], [i, j])) {
-						drawGrid((posX + i) * gridSize, (posY + j) * gridSize, gCtx, color);
-					}
+		for(var i = 0; i < shapePoints.length; i++) {
+			for(var j = 0; j < shapePoints[i].length; j++) {
+				if(shapePoints[i][j]) {
+					drawGrid((posX + j) * gridSize, (posY + i) * gridSize, gCtx, color);
 				}
 			}
 		}
+
+
 
 		this.canvas = gCanvas;
 		this.ctx = gCtx;
