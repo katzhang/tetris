@@ -77,27 +77,6 @@ function rotate(obj) {
 	var color = obj.color;
 	var canvas = obj.canvas;
 
-	// var rotate = obj.canvas.style.webkitTransform;
-	// rotate = rotate ? parseInt(rotate.replace(/^\D+/g, '')) : 0;
-	// rotate = rotate + 90;
-	// console.log(obj.canvas.style);
-	// obj.canvas.style.webkitTransform = 'rotate(' + rotate + 'deg)';
-	// obj.canvas.style.webkitTransformOrigin = '0 0';
-
-	// var left = obj.canvas.style.left;
-	// var top = obj.canvas.style.top;
-	// left = left ? parseInt(left.replace('px', '')) : 0;
-	// top = top ? parseInt(top.replace('px', '')) : 0;
-
-	//always centered: horizontal
-	// if(obj.rotateCount % 2) {
-	// 	left = left + gridSize;
-	// } else {
-	// 	left = left - gridSize;
-	// }
-	// left = left + 'px';
-	// obj.canvas.style.left = left;
-
 	//Clear canvas for redrawing
 	console.log('canvas old width: ' + canvas.width);
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -120,14 +99,7 @@ function rotate(obj) {
 	}
 
 	obj.canvas = canvas;
-
-
-	//always centered: vertical
-	// if(obj.rotateCount % 2) {
-	// 	console.log('odd number');
-	// 	top = (top + gridSize/2) + 'px';
-	// 	obj.canvas.style.top = top;
-	// }
+	obj.shapePoints = newShapePoints;
 
 	//change grid's height and width
 	obj.width = height;

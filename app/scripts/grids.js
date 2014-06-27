@@ -10,10 +10,6 @@ var shapesPool = [
 	{
 		height: 3,
 		width: 2,
-		points: [
-			[[0, 0], [0, 1], [1, 1], [1, 2]],
-			[[]]
-		],
 		shapePoints: [
 			[1, 0],
 			[1, 1],
@@ -25,7 +21,6 @@ var shapesPool = [
 	{
 		height: 3,
 		width: 2,
-		points: [[1, 0], [0, 1], [1, 1], [0, 2]],
 		shapePoints: [
 			[0, 1],
 			[1, 1],
@@ -36,7 +31,6 @@ var shapesPool = [
 	{
 		height: 4,
 		width: 1,
-		points: [[0, 0], [0, 1], [0, 2], [0, 3]],
 		shapePoints: [
 			[1],
 			[1],
@@ -48,7 +42,6 @@ var shapesPool = [
 	{
 		height: 2,
 		width: 3,
-		points: [[0, 0], [1, 0], [2, 0], [1, 1]],
 		shapePoints: [
 			[1, 1, 1],
 			[0, 1, 0]
@@ -59,7 +52,6 @@ var shapesPool = [
 	{
 		height: 2,
 		width: 2,
-		points: [[0, 0], [0, 1], [1, 1], [1, 0]],
 		shapePoints: [
 			[1, 1],
 			[1, 1]
@@ -69,7 +61,6 @@ var shapesPool = [
 	{
 		height: 3,
 		width: 2,
-		points: [[0, 0], [1, 0], [1, 1], [1, 2]],
 		shapePoints: [
 			[1, 1],
 			[0, 1],
@@ -80,7 +71,6 @@ var shapesPool = [
 	{
 		height: 3,
 		width: 2,
-		points: [[0, 0], [1, 0], [0, 1], [0, 2]],
 		shapePoints: [
 			[1, 1],
 			[1, 0],
@@ -97,20 +87,6 @@ function drawGrid(posX, posY, ctx, color) {
 	ctx.strokeStyle = '#000000';
 	ctx.lineWidth = gridStroke;
 	ctx.strokeRect(posX, posY, gridSize, gridSize);
-}
-
-function compareArray(array1, array2) {
-	if(!array1 || !array2 || array1.length !== array2.length) {
-		return false;
-	}
-
-	for(var i = 0; i < array1.length; i++) {
-		if(array1[i] !== array2[i]) {
-			return false;
-		}
-	}
-
-	return true;
 }
 
 //Get a random number betwee min and max (both inclusive)
@@ -140,7 +116,6 @@ function Grids(options) {
 
 	this.width = this.shape.width;
 	this.height = this.shape.height;
-	this.points = this.shape.points;
 	this.color = this.shape.color;
 	this.shapePoints = this.shape.shapePoints;
 
@@ -153,29 +128,29 @@ function Grids(options) {
 		var posY = this.posY;
 		var width = this.width;
 		var height = this.height;
-		var points = this.points;
+		var shapePoints = this.shapePoints;
 
 		//When stopped
 		if(top >= (board.height * gridSize - this.height * gridSize) || !valid) {
 			//Update state to be "still"
 			this.state = 'still';
 
-			//Update positions
-			// for(var i = posX; i < posX + width; i++) {
-			// 	for(var j = posY; j < posY + height; j++) {
-			// 		board.filledPoints.push([i,j]);
-			// 		// console.log(board.filledPoints);
-			// 		console.log('board ' + i + ' ' + j + ' now is unavailable')
-			// 	}
-			// }
+			// points.forEach(function(point) {
+			// 	var x = point[0] + posX;
+			// 	var y = point[1] + posY;
 
-			points.forEach(function(point) {
-				var x = point[0] + posX;
-				var y = point[1] + posY;
+			// 	board.filledPoints.push([x, y]);
+			// 	console.log('board ' + x + ' ' + y + ' now is unavailable')
+			// })
 
-				board.filledPoints.push([x, y]);
-				console.log('board ' + x + ' ' + y + ' now is unavailable')
-			})
+			for(var i = 0; i < shapePoints.length; i++) {
+				for(var j = 0; j < shapePoints[i].length; j++) {
+					if(shapePoints[i][j]) {
+						board.filledPoints.push([posX + j, posY + i]);
+						console.log('board new filed point: ' + (posX + j));
+					}
+				}
+			}
 
 			//Generate a new grid
 			var randomNumber = getRandomInt(0, 6);
@@ -203,26 +178,35 @@ function Grids(options) {
 	this.validate = function(offsetX, offsetY, ifRotate) {
 		var posX = this.posX + offsetX;
 		var posY = this.posY + offsetY;
-		var height = this.height;
-		var width = this.width;
-		var points = this.points;
+		var height;
+		var width;
+		if(ifRotate) {
+			height = this.width;
+			width = this.height;
+		} else {
+			height = this.height;
+			width = this.width;
+		}
+		var shapePoints = this.shapePoints;
 		var output = true;
 
-		// if(ifRotate) {
-		// 	this.height = width;
-		// 	this.width = height;
-		// }
-
 		board.filledPoints.forEach(function(filledPoint) {
-			// if(posX == point[0] && posY == point[1]) {
-			// 	output = false;
-			// }
-			points.forEach(function(shapePoint) {
-				if((shapePoint[0] + posX) == filledPoint[0] && 
-					shapePoint[1] + posY == filledPoint[1]) {
-					output = false;
+			// points.forEach(function(shapePoint) {
+			// 	if((shapePoint[0] + posX) == filledPoint[0] && 
+			// 		shapePoint[1] + posY == filledPoint[1]) {
+			// 		output = false;
+			// 	}
+			// })
+			for(var i = 0; i < shapePoints.length; i++) {
+				for(var j = 0; j < shapePoints[i].length; j++) {
+					if(shapePoints[i][j]) {
+						if((posX + j) == filledPoint[0] &&
+							(posY + i) == filledPoint[1]) {
+							output = false;
+						}
+					}
 				}
-			})
+			}
 		})
 
 		if (posX > (board.width - width)
@@ -239,7 +223,6 @@ function Grids(options) {
 		var numberY = this.height;
 		var posX = this.posX;
 		var posY = this.posY;
-		var points = this.points;
 		var shapePoints = this.shapePoints;
 		var color = this.color;
 
@@ -264,7 +247,7 @@ function Grids(options) {
 		for(var i = 0; i < shapePoints.length; i++) {
 			for(var j = 0; j < shapePoints[i].length; j++) {
 				if(shapePoints[i][j]) {
-					drawGrid((posX + j) * gridSize, (posY + i) * gridSize, gCtx, color);
+					drawGrid((0 + j) * gridSize, (0 + i) * gridSize, gCtx, color);
 				}
 			}
 		}
