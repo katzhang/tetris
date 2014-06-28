@@ -119,7 +119,7 @@ function Grids(options) {
 	this.color = this.shape.color;
 	this.shapePoints = this.shape.shapePoints;
 
-	this.fall = function(timestamp) {
+	this.fall = function() {
 		var top = this.canvas.style.top;
 		top = top ? parseInt(top.replace('px', '')) : 0;
 
@@ -129,19 +129,12 @@ function Grids(options) {
 		var width = this.width;
 		var height = this.height;
 		var shapePoints = this.shapePoints;
+		var interval = 1000/this.fps;
 
 		//When stopped
 		if(top >= (board.height * gridSize - this.height * gridSize) || !valid) {
 			//Update state to be "still"
 			this.state = 'still';
-
-			// points.forEach(function(point) {
-			// 	var x = point[0] + posX;
-			// 	var y = point[1] + posY;
-
-			// 	board.filledPoints.push([x, y]);
-			// 	console.log('board ' + x + ' ' + y + ' now is unavailable')
-			// })
 
 			for(var i = 0; i < shapePoints.length; i++) {
 				for(var j = 0; j < shapePoints[i].length; j++) {
@@ -158,14 +151,14 @@ function Grids(options) {
 			return false;
 		};
 
-		requestAnimationFrame(this.fall.bind(this));
+		this.frameId = requestAnimationFrame(this.fall.bind(this, interval));
 
 		this.now = Date.now();
 		this.delta = this.now - this.then;
 
-		if(this.delta > this.interval) {
+		if(this.delta > interval) {
 			//First check if next position is available
-			this.then = this.now - (this.delta % this.interval);
+			this.then = this.now - (this.delta % interval);
 			top = (top + gridSize) + 'px';
 			this.canvas.style.top = top;
 
@@ -191,12 +184,6 @@ function Grids(options) {
 		var output = true;
 
 		board.filledPoints.forEach(function(filledPoint) {
-			// points.forEach(function(shapePoint) {
-			// 	if((shapePoint[0] + posX) == filledPoint[0] && 
-			// 		shapePoint[1] + posY == filledPoint[1]) {
-			// 		output = false;
-			// 	}
-			// })
 			for(var i = 0; i < shapePoints.length; i++) {
 				for(var j = 0; j < shapePoints[i].length; j++) {
 					if(shapePoints[i][j]) {
@@ -225,6 +212,7 @@ function Grids(options) {
 		var posY = this.posY;
 		var shapePoints = this.shapePoints;
 		var color = this.color;
+		var interval = this.interval;
 
 		//Manage IDs of grids
 		this.previousId = GRID_IDS.length ? GRID_IDS[GRID_IDS.length - 1] : -1;

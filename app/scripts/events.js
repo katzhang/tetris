@@ -6,8 +6,6 @@ window.addEventListener('keydown', function(e) {
         e.preventDefault();
     }
 
-    console.log(currentGrid.posX);
-
     switch(e.keyCode) {
     	case 39:
     		if(currentGrid.validate(1,0)) {
@@ -25,9 +23,26 @@ window.addEventListener('keydown', function(e) {
     			rotate(currentGrid);
     		}
     		break;
+      	case 40:
+    		if(currentGrid.validate(0,1)) {
+    			currentGrid.fps = 20;
+    		}
+    		break;
 
     }
     console.log(e.keyCode);
+}, false);
+
+window.addEventListener('keyup', function(e) {
+    // space and arrow keys
+    if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+        e.preventDefault();
+    }
+
+    if(e.keyCode === 40) {
+    	console.log('key up 40');
+    	currentGrid.fps = 2;
+    }
 }, false);
 
 function moveToSide(obj, ifToLeft) {
