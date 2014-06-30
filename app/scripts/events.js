@@ -93,7 +93,6 @@ function rotate(obj) {
 	var canvas = obj.canvas;
 
 	//Clear canvas for redrawing
-	console.log('canvas old width: ' + canvas.width);
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	canvas.height = width * gridSize;
 	canvas.width = height * gridSize;

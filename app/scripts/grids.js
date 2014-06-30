@@ -181,6 +181,9 @@ function Grids(options) {
 			width = this.width;
 		}
 		var shapePoints = this.shapePoints;
+		if(ifRotate) {
+			shapePoints = rotateShapePoints(shapePoints);
+		}
 		var output = true;
 
 		board.filledPoints.forEach(function(filledPoint) {
