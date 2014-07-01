@@ -15,6 +15,7 @@ function Board(options) {
 	}
 
 	this.filledPoints = [];
+	this.filledLines = {};
 
 	for(var n in options) {
 		this[n] = options[n];
@@ -27,6 +28,13 @@ function Board(options) {
 		this.height = sizes[size][1];
 		container.style.width = sizes[size][0] * gridSize + 'px';
 		container.style.height = sizes[size][1] * gridSize + 'px';
+
+		var canvas = document.querySelector('.board-canvas');
+		var ctx = canvas.getContext('2d');
+		canvas.width = sizes[size][0] * gridSize;
+		canvas.height = sizes[size][1] * gridSize;
+		this.canvas = canvas;
+		this.ctx = ctx;
 	}
 
 	this.init();

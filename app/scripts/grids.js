@@ -89,6 +89,17 @@ function drawGrid(posX, posY, ctx, color) {
 	ctx.strokeRect(posX, posY, gridSize, gridSize);
 }
 
+function checkFilledLine(line) {
+	var output = true;
+	for(var i = 0; i < board.width; i++) {
+		if(line.indexOf(i) <= -1) {
+			output = false;
+		}
+	}
+
+	return output;
+}
+
 //Get a random number betwee min and max (both inclusive)
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -130,6 +141,9 @@ function Grids(options) {
 		var height = this.height;
 		var shapePoints = this.shapePoints;
 		var interval = 1000/this.fps;
+		var color = this.color;
+		var boardCtx = board.ctx;
+		var ifClear = true;
 
 		//When stopped
 		if(top >= (board.height * gridSize - this.height * gridSize) || !valid) {
@@ -140,7 +154,20 @@ function Grids(options) {
 				for(var j = 0; j < shapePoints[i].length; j++) {
 					if(shapePoints[i][j]) {
 						board.filledPoints.push([posX + j, posY + i]);
-						console.log('board new filed point: ' + (posX + j));
+						if(!((posY + i).toString() in board.filledLines)) {
+							board.filledLines[posY + i] = [];
+						}
+						board.filledLines[posY + i].push(posX + j);
+					}
+				}
+			}
+
+			//Clear the grid's own canvas and paint on the board's canvas
+			this.ctx.clearRect(0, 0, width * gridSize, height * gridSize);
+			for(var k = 0; k < shapePoints.length; k++) {
+				for(var m = 0; m < shapePoints[k].length; m++) {
+					if(shapePoints[k][m]) {
+						drawGrid((posX + m) * gridSize, (posY + k) * gridSize, boardCtx, color);
 					}
 				}
 			}
@@ -148,8 +175,17 @@ function Grids(options) {
 			//Generate a new grid
 			var randomNumber = getRandomInt(0, 6);
 			currentGrid = new Grids({shape: shapesPool[randomNumber], posX: 0, posY: 0});
+
+			//Check if a line can be cleared
+			for(var line in board.filledLines) {
+				if(checkFilledLine(board.filledLines[line])) {
+					console.log('line' + line + ' is filled now');
+				}
+			}
+
 			return false;
-		};
+
+		}
 
 		this.frameId = requestAnimationFrame(this.fall.bind(this, interval));
 
@@ -208,7 +244,6 @@ function Grids(options) {
 	}
 
 	this.init = function() {
-		console.log('new grid init');
 		var numberX = this.width;
 		var numberY = this.height;
 		var posX = this.posX;
@@ -242,9 +277,6 @@ function Grids(options) {
 				}
 			}
 		}
-		console.log('canvas width ' + gCanvas.width);
-
-
 
 		this.canvas = gCanvas;
 		this.ctx = gCtx;

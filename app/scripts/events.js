@@ -30,7 +30,6 @@ window.addEventListener('keydown', function(e) {
     		break;
 
     }
-    console.log(e.keyCode);
 }, false);
 
 window.addEventListener('keyup', function(e) {
@@ -40,7 +39,6 @@ window.addEventListener('keyup', function(e) {
     }
 
     if(e.keyCode === 40) {
-    	console.log('key up 40');
     	currentGrid.fps = 2;
     }
 }, false);
@@ -100,13 +98,9 @@ function rotate(obj) {
 	//Update shapePoints
 	var newShapePoints = rotateShapePoints(shapePoints);
 
-	console.log(newShapePoints);
-
 	for(var i = 0; i < newShapePoints.length; i++) {
 		for(var j = 0; j < newShapePoints[i].length; j++) {
 			if(newShapePoints[i][j]) {
-				console.log(ctx);
-				console.log(posX);
 				drawGrid((0 + j) * gridSize, (0 + i) * gridSize, ctx, color);
 			}
 		}
