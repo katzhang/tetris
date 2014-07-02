@@ -180,6 +180,7 @@ function Grids(options) {
 			for(var line in board.filledLines) {
 				if(checkFilledLine(board.filledLines[line])) {
 					console.log('line' + line + ' is filled now');
+					boardCtx.clearRect(0, line * gridSize, board.width * gridSize, gridSize);
 				}
 			}
 
