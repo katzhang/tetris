@@ -142,7 +142,10 @@ function Grids(options) {
 		var shapePoints = this.shapePoints;
 		var interval = 1000/this.fps;
 		var color = this.color;
+		var boardCanvas = board.canvas;
 		var boardCtx = board.ctx;
+		var boardWidth = board.width * gridSize;
+		var boardHeight = board.height * gridSize;
 		var ifClear = true;
 
 		//When stopped
@@ -180,7 +183,8 @@ function Grids(options) {
 			for(var line in board.filledLines) {
 				if(checkFilledLine(board.filledLines[line])) {
 					console.log('line' + line + ' is filled now');
-					boardCtx.clearRect(0, line * gridSize, board.width * gridSize, gridSize);
+					// boardCtx.clearRect(0, line * gridSize, board.width * gridSize, gridSize);
+					boardCtx.drawImage(boardCanvas, 0, 0, board.width * gridSize, line * gridSize, 0, gridSize, board.width * gridSize, board.height * gridSize);
 				}
 			}
 
