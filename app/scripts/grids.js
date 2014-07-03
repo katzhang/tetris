@@ -105,6 +105,23 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function cloneCanvas(oldCanvas) {
+
+    //create a new canvas
+    var newCanvas = document.createElement('canvas');
+    var context = newCanvas.getContext('2d');
+
+    //set dimensions
+    newCanvas.width = oldCanvas.width;
+    newCanvas.height = oldCanvas.height;
+
+    //apply the old canvas to the new one
+    context.drawImage(oldCanvas, 0, 0);
+
+    //return the new canvas
+    return newCanvas;
+}
+
 function Grids(options) {
 	this.shape = null;
 	this.width = 1;
@@ -183,8 +200,16 @@ function Grids(options) {
 			for(var line in board.filledLines) {
 				if(checkFilledLine(board.filledLines[line])) {
 					console.log('line' + line + ' is filled now');
+					var canvasCopy = cloneCanvas(boardCanvas);
 					// boardCtx.clearRect(0, line * gridSize, board.width * gridSize, gridSize);
-					boardCtx.drawImage(boardCanvas, 0, 0, board.width * gridSize, line * gridSize, 0, gridSize, board.width * gridSize, board.height * gridSize);
+					boardCtx.clearRect(0, 0, board.width * gridSize, board.height * gridSize);
+					boardCtx.drawImage(canvasCopy, 0, 0, board.width * gridSize, line * gridSize, 0, gridSize, board.width * gridSize, line * gridSize);
+					board.filledPoints.forEach(function(point) {
+						point[1] += 1;
+					})
+					for(var line2 in board.filledLines) {
+						board.filledLines[line2] = board.filledLines[line2 - 1] ? board.filledLines[line2 - 1] : [];
+					}
 				}
 			}
 
