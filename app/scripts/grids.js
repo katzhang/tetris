@@ -204,8 +204,14 @@ function Grids(options) {
 					// boardCtx.clearRect(0, line * gridSize, board.width * gridSize, gridSize);
 					boardCtx.clearRect(0, 0, board.width * gridSize, board.height * gridSize);
 					boardCtx.drawImage(canvasCopy, 0, 0, board.width * gridSize, line * gridSize, 0, gridSize, board.width * gridSize, line * gridSize);
-					board.filledPoints.forEach(function(point) {
-						point[1] += 1;
+					board.filledPoints.forEach(function(point, index, points) {
+						if(point[1] == line) {
+							console.log(point[1] + ' is removed');
+							console.log(index);
+							points.splice(index, 1);
+						} else if(point[1] < line){
+							point[1] += 1;
+						}
 					})
 					for(var line2 in board.filledLines) {
 						board.filledLines[line2] = board.filledLines[line2 - 1] ? board.filledLines[line2 - 1] : [];
