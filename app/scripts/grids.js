@@ -129,7 +129,7 @@ function Grids(options) {
 	this.posX = 0;
 	this.posY = 0;
 
-	this.fps = 2;
+	this.fps = 1;
 	this.now = null;
 	this.then = null;
 	this.delta = null;
@@ -206,13 +206,13 @@ function Grids(options) {
 					boardCtx.drawImage(canvasCopy, 0, 0, board.width * gridSize, line * gridSize, 0, gridSize, board.width * gridSize, line * gridSize);
 					board.filledPoints.forEach(function(point, index, points) {
 						if(point[1] == line) {
-							console.log(point[1] + ' is removed');
-							console.log(index);
+							console.log('point ' + point[0] + ' ' + point[1] + ' is removed');
 							points.splice(index, 1);
 						} else if(point[1] < line){
 							point[1] += 1;
 						}
 					})
+					console.log(board.filledPoints);
 					for(var line2 in board.filledLines) {
 						board.filledLines[line2] = board.filledLines[line2 - 1] ? board.filledLines[line2 - 1] : [];
 					}
