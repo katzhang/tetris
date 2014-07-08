@@ -29,6 +29,10 @@ function Board(options) {
 		container.style.width = sizes[size][0] * gridSize + 'px';
 		container.style.height = sizes[size][1] * gridSize + 'px';
 
+		for(var i = 0; i < this.height; i++) {
+			this.filledLines[i] = [];
+		};
+
 		var canvas = document.querySelector('.board-canvas');
 		var ctx = canvas.getContext('2d');
 		canvas.width = sizes[size][0] * gridSize;

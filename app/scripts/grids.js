@@ -164,6 +164,7 @@ function Grids(options) {
 		var boardWidth = board.width * gridSize;
 		var boardHeight = board.height * gridSize;
 		var ifClear = true;
+		var previousLine = null;
 
 		//When stopped
 		if(top >= (board.height * gridSize - this.height * gridSize) || !valid) {
@@ -174,9 +175,8 @@ function Grids(options) {
 				for(var j = 0; j < shapePoints[i].length; j++) {
 					if(shapePoints[i][j]) {
 						board.filledPoints.push([posX + j, posY + i]);
-						if(!((posY + i).toString() in board.filledLines)) {
-							board.filledLines[posY + i] = [];
-						}
+						console.log('x: ' + (posX + j));
+						console.log('y: ' + (posY + i));
 						board.filledLines[posY + i].push(posX + j);
 					}
 				}
@@ -200,21 +200,36 @@ function Grids(options) {
 			for(var line in board.filledLines) {
 				if(checkFilledLine(board.filledLines[line])) {
 					console.log('line' + line + ' is filled now');
+					console.log(board.filledPoints);
 					var canvasCopy = cloneCanvas(boardCanvas);
 					// boardCtx.clearRect(0, line * gridSize, board.width * gridSize, gridSize);
 					boardCtx.clearRect(0, 0, board.width * gridSize, board.height * gridSize);
 					boardCtx.drawImage(canvasCopy, 0, 0, board.width * gridSize, line * gridSize, 0, gridSize, board.width * gridSize, line * gridSize);
-					board.filledPoints.forEach(function(point, index, points) {
-						if(point[1] == line) {
-							console.log('point ' + point[0] + ' ' + point[1] + ' is removed');
-							points.splice(index, 1);
-						} else if(point[1] < line){
-							point[1] += 1;
+					for(var p = 0; p < board.filledPoints.length; p++) {
+						if(board.filledPoints[p][1] == line) {
+							console.log('point ' + board.filledPoints[p][0] + ' ' + board.filledPoints[p][1] + ' is removed');
+							board.filledPoints.splice(p, 1);
+							p--;
+						} else if(board.filledPoints[p][1] < line){
+							board.filledPoints[p][1] += 1;
 						}
-					})
-					console.log(board.filledPoints);
-					for(var line2 in board.filledLines) {
-						board.filledLines[line2] = board.filledLines[line2 - 1] ? board.filledLines[line2 - 1] : [];
+					}
+					// console.log(board.filledPoints);
+					// for(var line2 in board.filledLines) {
+					// 	console.log(line2);
+					// 	console.log(board.filledLines[line2]);
+					// 	previousLine = (line2 - 1).toString();
+					// 	console.log(previousLine);
+					// 	console.log(board.filledLines[previousLine]);
+					// 	board.filledLines[line2] = (board.filledLines[previousLine] ? board.filledLines[previousLine] : []);
+					// }
+					for(var q = board.height - 1; q >= 0; q--) {
+						if(q == 0) {
+							board.filledLines[q] = [];
+						} else {
+							board.filledLines[q] = board.filledLines[q - 1];
+						}
+						console.log(board.filledLines[q]);
 					}
 				}
 			}
