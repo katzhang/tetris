@@ -214,19 +214,10 @@ function Grids(options) {
 							board.filledPoints[p][1] += 1;
 						}
 					}
-					// console.log(board.filledPoints);
-					// for(var line2 in board.filledLines) {
-					// 	console.log(line2);
-					// 	console.log(board.filledLines[line2]);
-					// 	previousLine = (line2 - 1).toString();
-					// 	console.log(previousLine);
-					// 	console.log(board.filledLines[previousLine]);
-					// 	board.filledLines[line2] = (board.filledLines[previousLine] ? board.filledLines[previousLine] : []);
-					// }
 					for(var q = board.height - 1; q >= 0; q--) {
 						if(q == 0) {
 							board.filledLines[q] = [];
-						} else {
+						} else if(q <= line) {
 							board.filledLines[q] = board.filledLines[q - 1];
 						}
 						console.log(board.filledLines[q]);
