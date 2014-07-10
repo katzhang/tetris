@@ -165,6 +165,8 @@ function Grids(options) {
 		var boardHeight = board.height * gridSize;
 		var ifClear = true;
 		var previousLine = null;
+		var frameId = this.frameId;
+		var linesToClear = [];
 
 		//When stopped
 		if(top >= (board.height * gridSize - this.height * gridSize) || !valid) {
@@ -199,30 +201,55 @@ function Grids(options) {
 			//Check if a line can be cleared
 			for(var line in board.filledLines) {
 				if(checkFilledLine(board.filledLines[line])) {
-					console.log('line' + line + ' is filled now');
-					console.log(board.filledPoints);
-					var canvasCopy = cloneCanvas(boardCanvas);
-					// boardCtx.clearRect(0, line * gridSize, board.width * gridSize, gridSize);
-					boardCtx.clearRect(0, 0, board.width * gridSize, board.height * gridSize);
-					boardCtx.drawImage(canvasCopy, 0, 0, board.width * gridSize, line * gridSize, 0, gridSize, board.width * gridSize, line * gridSize);
-					for(var p = 0; p < board.filledPoints.length; p++) {
-						if(board.filledPoints[p][1] == line) {
-							console.log('point ' + board.filledPoints[p][0] + ' ' + board.filledPoints[p][1] + ' is removed');
-							board.filledPoints.splice(p, 1);
-							p--;
-						} else if(board.filledPoints[p][1] < line){
-							board.filledPoints[p][1] += 1;
-						}
-					}
-					for(var q = board.height - 1; q >= 0; q--) {
-						if(q == 0) {
-							board.filledLines[q] = [];
-						} else if(q <= line) {
-							board.filledLines[q] = board.filledLines[q - 1];
-						}
-						console.log(board.filledLines[q]);
-					}
+					linesToClear.push(line);
+					// var canvasCopy = cloneCanvas(boardCanvas);
+
+					// // boardCtx.clearRect(0, line * gridSize, board.width * gridSize, gridSize);
+					// boardCtx.clearRect(0, 0, board.width * gridSize, board.height * gridSize);
+					// boardCtx.drawImage(canvasCopy, 0, 0, board.width * gridSize, line * gridSize, 0, gridSize, board.width * gridSize, line * gridSize);
+					// for(var p = 0; p < board.filledPoints.length; p++) {
+					// 	if(board.filledPoints[p][1] == line) {
+					// 		board.filledPoints.splice(p, 1);
+					// 		p--;
+					// 	} else if(board.filledPoints[p][1] < line){
+					// 		board.filledPoints[p][1] += 1;
+					// 	}
+					// }
+					// for(var q = board.height - 1; q >= 0; q--) {
+					// 	if(q == 0) {
+					// 		board.filledLines[q] = [];
+					// 	} else if(q <= line) {
+					// 		board.filledLines[q] = board.filledLines[q - 1];
+					// 	}
+					// }
 				}
+			}
+
+			var canvasCopy = cloneCanvas(boardCanvas);
+
+			// boardCtx.clearRect(0, line * gridSize, board.width * gridSize, gridSize);
+			boardCtx.clearRect(0, 0, board.width * gridSize, board.height * gridSize);
+			boardCtx.drawImage(canvasCopy, 0, 0, board.width * gridSize, line * gridSize, 0, gridSize, board.width * gridSize, line * gridSize);
+			for(var p = 0; p < board.filledPoints.length; p++) {
+				if(board.filledPoints[p][1] == line) {
+					board.filledPoints.splice(p, 1);
+					p--;
+				} else if(board.filledPoints[p][1] < line){
+					board.filledPoints[p][1] += 1;
+				}
+			}
+			for(var q = board.height - 1; q >= 0; q--) {
+				if(q == 0) {
+					board.filledLines[q] = [];
+				} else if(q <= line) {
+					board.filledLines[q] = board.filledLines[q - 1];
+				}
+			}
+
+			//Check if reached the top so that game can be ended
+			if(posY == 0) {
+				currentGrid = null;
+				console.log('game ends!');
 			}
 
 			return false;
