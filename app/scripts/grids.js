@@ -201,48 +201,26 @@ function Grids(options) {
 			//Check if a line can be cleared
 			for(var line in board.filledLines) {
 				if(checkFilledLine(board.filledLines[line])) {
-					linesToClear.push(line);
-					// var canvasCopy = cloneCanvas(boardCanvas);
+					var canvasCopy = cloneCanvas(boardCanvas);
 
-					// // boardCtx.clearRect(0, line * gridSize, board.width * gridSize, gridSize);
-					// boardCtx.clearRect(0, 0, board.width * gridSize, board.height * gridSize);
-					// boardCtx.drawImage(canvasCopy, 0, 0, board.width * gridSize, line * gridSize, 0, gridSize, board.width * gridSize, line * gridSize);
-					// for(var p = 0; p < board.filledPoints.length; p++) {
-					// 	if(board.filledPoints[p][1] == line) {
-					// 		board.filledPoints.splice(p, 1);
-					// 		p--;
-					// 	} else if(board.filledPoints[p][1] < line){
-					// 		board.filledPoints[p][1] += 1;
-					// 	}
-					// }
-					// for(var q = board.height - 1; q >= 0; q--) {
-					// 	if(q == 0) {
-					// 		board.filledLines[q] = [];
-					// 	} else if(q <= line) {
-					// 		board.filledLines[q] = board.filledLines[q - 1];
-					// 	}
-					// }
-				}
-			}
-
-			var canvasCopy = cloneCanvas(boardCanvas);
-
-			// boardCtx.clearRect(0, line * gridSize, board.width * gridSize, gridSize);
-			boardCtx.clearRect(0, 0, board.width * gridSize, board.height * gridSize);
-			boardCtx.drawImage(canvasCopy, 0, 0, board.width * gridSize, line * gridSize, 0, gridSize, board.width * gridSize, line * gridSize);
-			for(var p = 0; p < board.filledPoints.length; p++) {
-				if(board.filledPoints[p][1] == line) {
-					board.filledPoints.splice(p, 1);
-					p--;
-				} else if(board.filledPoints[p][1] < line){
-					board.filledPoints[p][1] += 1;
-				}
-			}
-			for(var q = board.height - 1; q >= 0; q--) {
-				if(q == 0) {
-					board.filledLines[q] = [];
-				} else if(q <= line) {
-					board.filledLines[q] = board.filledLines[q - 1];
+					boardCtx.clearRect(0, 0, board.width * gridSize, (line + 1) * gridSize);
+					//boardCtx.clearRect(0, 0, board.width * gridSize, board.height * gridSize);
+					boardCtx.drawImage(canvasCopy, 0, 0, board.width * gridSize, line * gridSize, 0, gridSize, board.width * gridSize, line * gridSize);
+					for(var p = 0; p < board.filledPoints.length; p++) {
+						if(board.filledPoints[p][1] == line) {
+							board.filledPoints.splice(p, 1);
+							p--;
+						} else if(board.filledPoints[p][1] < line){
+							board.filledPoints[p][1] += 1;
+						}
+					}
+					for(var q = board.height - 1; q >= 0; q--) {
+						if(q == 0) {
+							board.filledLines[q] = [];
+						} else if(q <= line) {
+							board.filledLines[q] = board.filledLines[q - 1];
+						}
+					}
 				}
 			}
 
