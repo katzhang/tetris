@@ -206,7 +206,8 @@ function Grids(options) {
 					if(line == 29) {
 						boardCtx.drawImage(canvasCopy, 0, 0, board.width * gridSize, line * gridSize, 0, gridSize, board.width * gridSize, line * gridSize);
 					} else {
-						boardCtx.drawImage(canvasCopy, 0, 0, board.width * gridSize, line * gridSize, 0, (30 - line) * gridSize, board.width * gridSize, line * gridSize);
+						boardCtx.drawImage(canvasCopy, 0, 0, board.width * gridSize, line * gridSize, 0, gridSize, board.width * gridSize, line * gridSize);
+						boardCtx.drawImage(canvasCopy, 0, (line) * gridSize, board.width * gridSize, (board.height - line + 2) * gridSize, 0, (line + 1) * gridSize, board.width * gridSize, line * gridSize);
 					}
 					// boardCtx.drawImage(canvasCopy, 0, 0, board.width * gridSize, line * gridSize, 0, gridSize, board.width * gridSize, line * gridSize);
 					for(var p = 0; p < board.filledPoints.length; p++) {
