@@ -200,16 +200,15 @@ function Grids(options) {
 			for(var line in board.filledLines) {
 				if(checkFilledLine(board.filledLines[line])) {
 					var canvasCopy = cloneCanvas(board.canvas);
-					console.log(line + ' is filled');
 					boardCtx.clearRect(0, 0, board.width * gridSize, (line + 1) * gridSize);
 					//boardCtx.clearRect(0, 0, board.width * gridSize, board.height * gridSize);
 					if(line == 29) {
 						boardCtx.drawImage(canvasCopy, 0, 0, board.width * gridSize, line * gridSize, 0, gridSize, board.width * gridSize, line * gridSize);
 					} else {
 						boardCtx.drawImage(canvasCopy, 0, 0, board.width * gridSize, line * gridSize, 0, gridSize, board.width * gridSize, line * gridSize);
-						boardCtx.drawImage(canvasCopy, 0, (line) * gridSize, board.width * gridSize, (board.height - line + 2) * gridSize, 0, (line + 1) * gridSize, board.width * gridSize, line * gridSize);
+						boardCtx.drawImage(canvasCopy, 0, (parseInt(line) + 1) * gridSize, board.width * gridSize, (board.height - line - 1) * gridSize, 0, (parseInt(line) + 1) * gridSize, board.width * gridSize, gridSize);
 					}
-					// boardCtx.drawImage(canvasCopy, 0, 0, board.width * gridSize, line * gridSize, 0, gridSize, board.width * gridSize, line * gridSize);
+					
 					for(var p = 0; p < board.filledPoints.length; p++) {
 						if(board.filledPoints[p][1] == line) {
 							board.filledPoints.splice(p, 1);
