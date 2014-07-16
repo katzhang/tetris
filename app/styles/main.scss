@@ -91,17 +91,18 @@ body {
 }
 
 canvas {
-    left: 0;
     position: absolute;
-    top: 0;
 }
 
 .board {
     border: 1px solid red;
+    overflow: hidden;
     position: relative;
 }
 
 .board-canvas {
     height: 100%;
+    left: 0;
+    top: 0;
     width: 100%;
 }

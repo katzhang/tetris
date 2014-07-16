@@ -192,10 +192,6 @@ function Grids(options) {
 				}
 			}
 
-			//Generate a new grid
-			var randomNumber = getRandomInt(0, 6);
-			currentGrid = new Grids({shape: shapesPool[randomNumber], posX: 0, posY: 0});
-
 			//Check if a line can be cleared
 			for(var line in board.filledLines) {
 				if(checkFilledLine(board.filledLines[line])) {
@@ -222,9 +218,14 @@ function Grids(options) {
 			}
 
 			//Check if reached the top so that game can be ended
-			if(posY == 0) {
+			console.log(posY);
+			if(posY <= 0) {
 				currentGrid = null;
-				console.log('game ends!');
+				document.querySelector('.note').innerHTML = "Game ends!";
+			} else {
+				//Generate a new grid
+				var randomNumber = getRandomInt(0, 6);
+				currentGrid = new Grids({shape: shapesPool[randomNumber], posX: 0, posY: -4});
 			}
 
 			return false;
@@ -311,6 +312,7 @@ function Grids(options) {
 		var gCtx = gCanvas.getContext('2d');
 		gCanvas.width = numberX * gridSize;
 		gCanvas.height = numberY * gridSize;
+		gCanvas.style.top = posY * gridSize + 'px';
 
 		container.appendChild(gCanvas);
 

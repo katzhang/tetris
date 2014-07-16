@@ -29,7 +29,7 @@ function Board(options) {
 		container.style.width = sizes[size][0] * gridSize + 'px';
 		container.style.height = sizes[size][1] * gridSize + 'px';
 
-		for(var i = 0; i < this.height; i++) {
+		for(var i = -5; i < this.height; i++) {
 			this.filledLines[i] = [];
 		};
 
