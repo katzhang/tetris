@@ -1,17 +1,16 @@
 'use strict';
 
-/**
-* Global constants
-*/
-
+//global variables
+// var canvas = document.getElementById('canvas');
+// var ctx = canvas.getContext('2d');
 var GRID_SIZE = 20;
 var GRID_STROKE = 2;
-var GRID_SIZE_TOTAL = GRID_SIZE + 2 * GRID_STROKE;
+var totalSize = GRID_SIZE + 2 * GRID_STROKE;
 var shapesPool = [
 	{
 		height: 3,
 		width: 2,
-		shapePoints: [
+		points: [
 			[1, 0],
 			[1, 1],
 			[0, 1]
@@ -22,7 +21,7 @@ var shapesPool = [
 	{
 		height: 3,
 		width: 2,
-		shapePoints: [
+		points: [
 			[0, 1],
 			[1, 1],
 			[1, 0]
@@ -32,7 +31,7 @@ var shapesPool = [
 	{
 		height: 4,
 		width: 1,
-		shapePoints: [
+		points: [
 			[1],
 			[1],
 			[1],
@@ -43,7 +42,7 @@ var shapesPool = [
 	{
 		height: 2,
 		width: 3,
-		shapePoints: [
+		points: [
 			[1, 1, 1],
 			[0, 1, 0]
 		],
@@ -53,7 +52,7 @@ var shapesPool = [
 	{
 		height: 2,
 		width: 2,
-		shapePoints: [
+		points: [
 			[1, 1],
 			[1, 1]
 		],
@@ -62,7 +61,7 @@ var shapesPool = [
 	{
 		height: 3,
 		width: 2,
-		shapePoints: [
+		points: [
 			[1, 1],
 			[0, 1],
 			[0, 1]
@@ -72,7 +71,7 @@ var shapesPool = [
 	{
 		height: 3,
 		width: 2,
-		shapePoints: [
+		points: [
 			[1, 1],
 			[1, 0],
 			[1, 0]
@@ -123,20 +122,10 @@ function cloneCanvas(oldCanvas) {
     return newCanvas;
 }
 
-/**
- * Instantiate a tetrimino with a random shape.
- *
- * @constructor
- * @param {Object} one shape object in shapesPool array
- */
-function Tetromino(shape) {
-	'use strict';
-	//Get properties filled in from the shape parameter
-	this.shape = shape;
-	this.width = shape.width;
-	this.height = shape.height;
-	this.color = shape.color;
-	this.points = shape.points;
+function Grids(options) {
+	this.shape = null;
+	this.width = 1;
+	this.height = 1;
 	this.posX = 0;
 	this.posY = 0;
 
@@ -145,6 +134,18 @@ function Tetromino(shape) {
 	this.then = null;
 	this.delta = null;
 	this.interval = 1000/this.fps;
+
+	this.rotateCount = 0;
+	this.moveToSideCount = 0;
+
+	for(var n in options) {
+		this[n] = options[n];
+	}
+
+	this.width = this.shape.width;
+	this.height = this.shape.height;
+	this.color = this.shape.color;
+	this.shapePoints = this.shape.shapePoints;
 
 	this.fall = function() {
 		var top = this.canvas.style.top;
@@ -248,44 +249,44 @@ function Tetromino(shape) {
 		}
 	}
 
-	// this.validate = function(offsetX, offsetY, ifRotate) {
-	// 	var posX = this.posX + offsetX;
-	// 	var posY = this.posY + offsetY;
-	// 	var height;
-	// 	var width;
-	// 	if(ifRotate) {
-	// 		height = this.width;
-	// 		width = this.height;
-	// 	} else {
-	// 		height = this.height;
-	// 		width = this.width;
-	// 	}
-	// 	var shapePoints = this.shapePoints;
-	// 	if(ifRotate) {
-	// 		shapePoints = rotateShapePoints(shapePoints);
-	// 	}
-	// 	var output = true;
+	this.validate = function(offsetX, offsetY, ifRotate) {
+		var posX = this.posX + offsetX;
+		var posY = this.posY + offsetY;
+		var height;
+		var width;
+		if(ifRotate) {
+			height = this.width;
+			width = this.height;
+		} else {
+			height = this.height;
+			width = this.width;
+		}
+		var shapePoints = this.shapePoints;
+		if(ifRotate) {
+			shapePoints = rotateShapePoints(shapePoints);
+		}
+		var output = true;
 
-	// 	board.filledPoints.forEach(function(filledPoint) {
-	// 		for(var i = 0; i < shapePoints.length; i++) {
-	// 			for(var j = 0; j < shapePoints[i].length; j++) {
-	// 				if(shapePoints[i][j]) {
-	// 					if((posX + j) == filledPoint[0] &&
-	// 						(posY + i) == filledPoint[1]) {
-	// 						output = false;
-	// 					}
-	// 				}
-	// 			}
-	// 		}
-	// 	})
+		board.filledPoints.forEach(function(filledPoint) {
+			for(var i = 0; i < shapePoints.length; i++) {
+				for(var j = 0; j < shapePoints[i].length; j++) {
+					if(shapePoints[i][j]) {
+						if((posX + j) == filledPoint[0] &&
+							(posY + i) == filledPoint[1]) {
+							output = false;
+						}
+					}
+				}
+			}
+		})
 
-	// 	if (posX > (board.width - width)
-	// 		|| posX < 0) {
-	// 		output = false;
-	// 	}
+		if (posX > (board.width - width)
+			|| posX < 0) {
+			output = false;
+		}
 
-	// 	return output;
-	// }
+		return output;
+	}
 
 	this.init = function() {
 		var numberX = this.width;
@@ -330,16 +331,4 @@ function Tetromino(shape) {
 	};
 
 	this.init();
-}
-
-/**
- * Determines if Tetromino's next position is valid 
- *
- * @param {number} offset x
- * @param {number} offset y
- * @param {boolean} if Tetrimino is rotating
- * @returns {boolean} Returns true if the next position is valid and thus can proceed
- */
-Tetromino.prototype.valid = function(offsetX, offsetY, rotate) {
-
 }

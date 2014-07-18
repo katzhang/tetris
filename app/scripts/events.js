@@ -49,7 +49,7 @@ function moveToSide(obj, ifToLeft) {
 
 	var left = obj.canvas.style.left;
 	left = left ? parseInt(left.replace('px', '')) : 0;
-	left = (ifToLeft ? (left - gridSize) : (left + gridSize)) + 'px';
+	left = (ifToLeft ? (left - GRID_SIZE) : (left + GRID_SIZE)) + 'px';
 	obj.canvas.style.left = left;
 
 	if(ifToLeft) {
@@ -92,8 +92,8 @@ function rotate(obj) {
 
 	//Clear canvas for redrawing
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	canvas.height = width * gridSize;
-	canvas.width = height * gridSize;
+	canvas.height = width * GRID_SIZE;
+	canvas.width = height * GRID_SIZE;
 
 	//Update shapePoints
 	var newShapePoints = rotateShapePoints(shapePoints);
@@ -101,7 +101,7 @@ function rotate(obj) {
 	for(var i = 0; i < newShapePoints.length; i++) {
 		for(var j = 0; j < newShapePoints[i].length; j++) {
 			if(newShapePoints[i][j]) {
-				drawGrid((0 + j) * gridSize, (0 + i) * gridSize, ctx, color);
+				drawGrid((0 + j) * GRID_SIZE, (0 + i) * GRID_SIZE, ctx, color);
 			}
 		}
 	}
