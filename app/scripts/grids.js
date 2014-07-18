@@ -333,6 +333,49 @@ function Tetromino(shape) {
 }
 
 /**
+ * Helper function: iterate given shape's points
+ *
+ * @param {array} shape's points
+ * @param {function} callback to be called on each solid point
+ */
+function iteratePoints(points, callback) {
+	var i, j;
+	for (i = 0; i < points.length; i++) {
+		for (j = 0; j < points[i].length; j++) {
+			if (point[i][j]) {
+				if (typeof callback === 'function') {
+					callback.call(null, i, j);
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Helper function: rotate given shape's points by 90 degrees clockwise
+ *
+ * @param {array} shape's points
+ * @returns {array} rotated shape's points
+ */
+ function rotatePoints(points) {
+ 	var i, j, k, output;
+
+ 	output = new Array(points[0].length);
+
+ 	for (k = 0; k < points.length; k++) {
+ 		output[k] = [];
+ 	}
+
+ 	for (i = 0; i < points.length; i++) {
+ 		for (j = 0; j < points.length; j++) {
+ 			output[j].unshift(points[i][j]);
+ 		}
+ 	}
+
+ 	return output;
+ }
+
+/**
  * Determines if Tetromino's next position is valid 
  *
  * @param {number} offset x
@@ -341,5 +384,37 @@ function Tetromino(shape) {
  * @returns {boolean} Returns true if the next position is valid and thus can proceed
  */
 Tetromino.prototype.valid = function(offsetX, offsetY, rotate) {
+	var posX,
+		posY,
+		height,
+		width,
+		points;
 
+	posX = this.posX + offsetX;
+	posY = this.posY + offsetY;
+	height = this.height;
+	width = this.width;
+	points = this.points;
+
+	//If rotating, swap height and width
+	//and rotate the points pattern by 90 degrees clockwise
+	if (rotate) {
+		height = this.width;
+		width = this.height;
+		points = rotatePoints(points);
+	}
+
+	board.filledPoints.forEach(function(filledPoint) {
+		iteratePoints(points, function(i, j) {
+			if ((posX + j) == filledPoint[0] && (posY + i) == filledPoint[1]) {
+				return false;
+			}
+		})
+	});
+
+	if (posX > (board.width - width) || posX < 0) {
+		return false;
+	}
+
+	return true;
 }
