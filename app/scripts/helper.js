@@ -21,3 +21,14 @@ function cloneCanvas(oldCanvas) {
     //return the new canvas
     return newCanvas;
 }
+
+/**
+ * Helper function: generate a random number betwee min and max (both inclusive)
+ *
+ * @param {number} min of the range
+ * @param {number} max of the range
+ * @returns {number} random number in the range
+ */
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}

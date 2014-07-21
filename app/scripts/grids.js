@@ -11,7 +11,7 @@ var shapesPool = [
 	{
 		height: 3,
 		width: 2,
-		shapePoints: [
+		points: [
 			[1, 0],
 			[1, 1],
 			[0, 1]
@@ -22,7 +22,7 @@ var shapesPool = [
 	{
 		height: 3,
 		width: 2,
-		shapePoints: [
+		points: [
 			[0, 1],
 			[1, 1],
 			[1, 0]
@@ -32,7 +32,7 @@ var shapesPool = [
 	{
 		height: 4,
 		width: 1,
-		shapePoints: [
+		points: [
 			[1],
 			[1],
 			[1],
@@ -43,7 +43,7 @@ var shapesPool = [
 	{
 		height: 2,
 		width: 3,
-		shapePoints: [
+		points: [
 			[1, 1, 1],
 			[0, 1, 0]
 		],
@@ -53,7 +53,7 @@ var shapesPool = [
 	{
 		height: 2,
 		width: 2,
-		shapePoints: [
+		points: [
 			[1, 1],
 			[1, 1]
 		],
@@ -62,7 +62,7 @@ var shapesPool = [
 	{
 		height: 3,
 		width: 2,
-		shapePoints: [
+		points: [
 			[1, 1],
 			[0, 1],
 			[0, 1]
@@ -72,7 +72,7 @@ var shapesPool = [
 	{
 		height: 3,
 		width: 2,
-		shapePoints: [
+		points: [
 			[1, 1],
 			[1, 0],
 			[1, 0]
@@ -80,15 +80,6 @@ var shapesPool = [
 		color: 'pink'
 	}
 ];
-
-function drawGrid(posX, posY, ctx, color) {
-	ctx.fillStyle = color;
-	ctx.fillRect(posX, posY, GRID_SIZE, GRID_SIZE);
-
-	// ctx.strokeStyle = '#000000';
-	// ctx.lineWidth = GRID_STROKE;
-	// ctx.strokeRect(posX, posY, GRID_SIZE - 1, GRID_SIZE - 1);
-}
 
 function checkFilledLine(line) {
 	var output = true;
@@ -100,12 +91,6 @@ function checkFilledLine(line) {
 
 	return output;
 }
-
-//Get a random number betwee min and max (both inclusive)
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 
 /**
  * Instantiate a tetrimino with a random shape.
@@ -136,7 +121,7 @@ function Tetromino(shape) {
 		var numberY = this.height;
 		var posX = this.posX;
 		var posY = this.posY;
-		var shapePoints = this.shapePoints;
+		var points = this.points;
 		var color = this.color;
 		var interval = this.interval;
 
@@ -159,10 +144,10 @@ function Tetromino(shape) {
 
 		container.appendChild(gCanvas);
 
-		for(var i = 0; i < shapePoints.length; i++) {
-			for(var j = 0; j < shapePoints[i].length; j++) {
-				if(shapePoints[i][j]) {
-					drawGrid((0 + j) * GRID_SIZE, (0 + i) * GRID_SIZE, gCtx, color);
+		for(var i = 0; i < points.length; i++) {
+			for(var j = 0; j < points[i].length; j++) {
+				if(points[i][j]) {
+					this.drawGrid((0 + j) * GRID_SIZE, (0 + i) * GRID_SIZE, gCtx, color);
 				}
 			}
 		}
@@ -245,11 +230,11 @@ Tetromino.prototype.valid = function(offsetX, offsetY, rotate) {
 	if (rotate) {
 		height = this.width;
 		width = this.height;
-		points = rotatePoints(points);
+		points = this.rotatePoints(points);
 	}
 
 	board.filledPoints.forEach(function(filledPoint) {
-		iteratePoints(points, function(i, j) {
+		this.iteratePoints(points, function(i, j) {
 			if ((posX + j) == filledPoint[0] && (posY + i) == filledPoint[1]) {
 				return false;
 			}
@@ -278,6 +263,41 @@ Tetromino.prototype.stop = function() {
 	}
 
 	return false;
+}
+
+/**
+ * Draw Tetromino's grid given the positions, context and color
+ *
+ * @param {number} offset x
+ * @param {number} offset y
+ * @param {object} canva's context object
+ * @param {string} color of the grid
+ */
+Tetromino.prototype.drawGrid = function(posX, posY, ctx, color) {
+	ctx.fillStyle = color;
+	ctx.fillRect(posX, posY, GRID_SIZE, GRID_SIZE);
+
+	// ctx.strokeStyle = '#000000';
+	// ctx.lineWidth = GRID_STROKE;
+	// ctx.strokeRect(posX, posY, GRID_SIZE - 1, GRID_SIZE - 1);
+}
+
+/**
+ * Determines if a given line is all filled
+ *
+ * @param {number} line number
+ * @returns {boolean} Returns true if the line is all filled
+ */
+Tetromino.prototype.checkFilledLine = function(line) {
+	var i;
+
+	for(i = 0; i < board.width; i++) {
+		if(line.indexOf(i) <= -1) {
+			return false
+		}
+	}
+
+	return true;
 }
 
 /**
@@ -315,12 +335,12 @@ Tetromino.prototype.fall = function() {
 			board.filledPoints.push([posX + j, posY + i]);
 			board.filledLines[posY + i].push(posX + j);
 
-			drawGrid((posX + j) * GRID_SIZE, (posY + i) * GRID_SIZE, boardCtx, color);
+			this.drawGrid((posX + j) * GRID_SIZE, (posY + i) * GRID_SIZE, boardCtx, color);
 		});
 
 		//Check if a line can be cleared
 		for(var line in board.filledLines) {
-			if(checkFilledLine(board.filledLines[line])) {
+			if(this.checkFilledLine(board.filledLines[line])) {
 				var canvasCopy = cloneCanvas(board.canvas);
 				boardCtx.clearRect(0, 0, board.width * GRID_SIZE, (parseInt(line) + 1) * GRID_SIZE);
 				boardCtx.drawImage(canvasCopy, 0, 0, board.width * GRID_SIZE, line * GRID_SIZE, 0, GRID_SIZE, board.width * GRID_SIZE, line * GRID_SIZE);
@@ -346,12 +366,12 @@ Tetromino.prototype.fall = function() {
 		//Check if reached the top so that game can be ended
 		console.log(posY);
 		if(posY <= 0) {
-			currentGrid = null;
+			currentTetromino = null;
 			document.querySelector('.note').innerHTML = "Game ends!";
 		} else {
 			//Generate a new grid
 			var randomNumber = getRandomInt(0, 6);
-			currentGrid = new Grids({shape: shapesPool[randomNumber], posX: 0, posY: -4});
+			currentTetromino = new Tetromino(shapesPool[randomNumber]);
 		}
 
 		return false;
@@ -369,7 +389,7 @@ Tetromino.prototype.fall = function() {
 		top = (top + GRID_SIZE) + 'px';
 		this.canvas.style.top = top;
 
-		//Update posY of the currentGrid
+		//Update posY of the currentTetromino
 		this.posY++;
 
 	}

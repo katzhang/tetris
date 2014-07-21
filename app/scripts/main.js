@@ -2,4 +2,4 @@
 
 var GRID_IDS = [];
 
-var currentGrid = new Grids({shape: shapesPool[6], posX: 0, posY: -3});
+var currentTetromino = new Tetromino(shapesPool[6]);
