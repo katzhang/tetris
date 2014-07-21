@@ -26,8 +26,8 @@ function Board(options) {
 		var sizes = this.boardSizes;
 		this.width = sizes[size][0];
 		this.height = sizes[size][1];
-		container.style.width = sizes[size][0] * GRID_SIZE + 'px';
-		container.style.height = sizes[size][1] * GRID_SIZE + 'px';
+		container.style.width = sizes[size][0] * gridSize + 'px';
+		container.style.height = sizes[size][1] * gridSize + 'px';
 
 		for(var i = -5; i < this.height; i++) {
 			this.filledLines[i] = [];
@@ -35,8 +35,8 @@ function Board(options) {
 
 		var canvas = document.querySelector('.board-canvas');
 		var ctx = canvas.getContext('2d');
-		canvas.width = sizes[size][0] * GRID_SIZE;
-		canvas.height = sizes[size][1] * GRID_SIZE;
+		canvas.width = sizes[size][0] * gridSize;
+		canvas.height = sizes[size][1] * gridSize;
 		this.canvas = canvas;
 		this.ctx = ctx;
 	}

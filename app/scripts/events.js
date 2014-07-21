@@ -8,24 +8,24 @@ window.addEventListener('keydown', function(e) {
 
     switch(e.keyCode) {
     	case 39:
-    		if(currentTetromino.valid(1,0)) {
-    			moveToSide(currentTetromino, false);
+    		if(currentGrid.validate(1,0)) {
+    			moveToSide(currentGrid, false);
     		}
     		break;
 
     	case 37:
-    		if(currentTetromino.valid(-1,0)) {
-    			moveToSide(currentTetromino, true);
+    		if(currentGrid.validate(-1,0)) {
+    			moveToSide(currentGrid, true);
     		}
     		break;
     	case 38:
-    		if(currentTetromino.valid(0,0,true)) {
-    			rotate(currentTetromino);
+    		if(currentGrid.validate(0,0,true)) {
+    			rotate(currentGrid);
     		}
     		break;
       	case 40:
-    		if(currentTetromino.valid(0,1)) {
-    			currentTetromino.fps = 20;
+    		if(currentGrid.validate(0,1)) {
+    			currentGrid.fps = 20;
     		}
     		break;
 
@@ -39,7 +39,7 @@ window.addEventListener('keyup', function(e) {
     }
 
     if(e.keyCode === 40) {
-    	currentTetromino.fps = 2;
+    	currentGrid.fps = 2;
     }
 }, false);
 
@@ -49,7 +49,7 @@ function moveToSide(obj, ifToLeft) {
 
 	var left = obj.canvas.style.left;
 	left = left ? parseInt(left.replace('px', '')) : 0;
-	left = (ifToLeft ? (left - GRID_SIZE) : (left + GRID_SIZE)) + 'px';
+	left = (ifToLeft ? (left - gridSize) : (left + gridSize)) + 'px';
 	obj.canvas.style.left = left;
 
 	if(ifToLeft) {
@@ -60,6 +60,22 @@ function moveToSide(obj, ifToLeft) {
 
 }
 
+function rotateShapePoints(array) {
+	var output = new Array(array[0].length);
+
+	for(var k = 0; k < output.length; k++) {
+		output[k] = [];
+	}
+
+	for(var i = 0; i < array.length; i++) {
+		for(var j = 0; j < array[i].length; j++) {
+			output[j].unshift(array[i][j]);
+		}
+	}
+
+	return output;
+}
+
 function rotate(obj) {
 	//increase count
 	obj.rotateCount++;
@@ -67,7 +83,7 @@ function rotate(obj) {
 	var height = obj.height;
 	var width = obj.width;
 	var points = obj.points;
-	var points = obj.points;
+	var shapePoints = obj.shapePoints;
 	var posX = obj.posX;
 	var posY = obj.posY;
 	var ctx = obj.ctx;
@@ -76,22 +92,22 @@ function rotate(obj) {
 
 	//Clear canvas for redrawing
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	canvas.height = width * GRID_SIZE;
-	canvas.width = height * GRID_SIZE;
+	canvas.height = width * gridSize;
+	canvas.width = height * gridSize;
 
-	//Update points
-	var newPoints = obj.rotatePoints(points);
+	//Update shapePoints
+	var newShapePoints = rotateShapePoints(shapePoints);
 
-	for(var i = 0; i < newPoints.length; i++) {
-		for(var j = 0; j < newPoints[i].length; j++) {
-			if(newPoints[i][j]) {
-				obj.drawGrid((0 + j) * GRID_SIZE, (0 + i) * GRID_SIZE, ctx, color);
+	for(var i = 0; i < newShapePoints.length; i++) {
+		for(var j = 0; j < newShapePoints[i].length; j++) {
+			if(newShapePoints[i][j]) {
+				drawGrid((0 + j) * gridSize, (0 + i) * gridSize, ctx, color);
 			}
 		}
 	}
 
 	obj.canvas = canvas;
-	obj.points = newPoints;
+	obj.shapePoints = newShapePoints;
 
 	//change grid's height and width
 	obj.width = height;
